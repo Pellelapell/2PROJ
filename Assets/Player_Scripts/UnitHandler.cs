@@ -1,27 +1,29 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 public class UnitHandler : MonoBehaviour
 {
     public NavMeshAgent agent;
     private bool selected;
-    private float moveSpeed;
-    private float attackRange;
+    public UnitStats unitStats;
     private Transform target;
+    private float nextTimeToAttack = 0f;
+    private float attackRange;
+    private float moveSpeed;
 
     void Awake()
     {
-        attackRange = GetComponent<UnitStats>().attackRange;
-        moveSpeed = GetComponent<UnitStats>().moveSpeed;
-        agent = GetComponent<NavMeshAgent>();
-        agent.speed = moveSpeed;
+        attackRange = unitStats.attackRange;
+        moveSpeed = unitStats.moveSpeed;
+        agent = GetComponent<NavMeshAgent>(); 
     }
 
     void Update()
     {
         LeftClickToSelect();
-        DefineDestination(selected);
-        DefineTarget(selected);
+        GetDestination(selected);
+        GetTarget(selected);
         StopInRangeForAttack(target);
     }
 
@@ -50,7 +52,7 @@ public class UnitHandler : MonoBehaviour
         return selected;
     }
 
-    void DefineDestination(bool selected)
+    Transform GetDestination(bool selected)
     {
         if (selected && Input.GetMouseButtonDown(1))
         {
@@ -59,12 +61,16 @@ public class UnitHandler : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
+                target = null;
+                agent.isStopped = false;
                 agent.SetDestination(hit.point);
+                Debug.Log(target);
             }
         }
+        return target;
     }
 
-    bool DefineTarget(bool selected)
+    bool GetTarget(bool selected)
     {
         if (selected && Input.GetMouseButtonDown(1))
         {
@@ -79,10 +85,11 @@ public class UnitHandler : MonoBehaviour
                 }
             }
         }
-        return target;    
+        return target;
     }
 
-    void StopInRangeForAttack(Transform target)
+
+    GameObject StopInRangeForAttack(Transform target)
     {
         if (target != null)
         {
@@ -90,11 +97,20 @@ public class UnitHandler : MonoBehaviour
             if (distanceTilTarget <= attackRange)
             {
                 agent.isStopped = true;
-            }
-            else
-            {
-                agent.isStopped = false;
+                float attackInterval = 1f / Mathf.Max(unitStats.attackSpeed, 0.01f);
+                if (Time.time >= nextTimeToAttack)
+                {
+                    nextTimeToAttack = Time.time + attackInterval;
+                    Attack(target.gameObject);
+                }
             }
         }
+        return target?.gameObject;
+    }
+
+    void Attack(GameObject target)
+    {
+        Debug.Log("jattaque");
+        target.GetComponent<UnitStats>().TakeDamage(unitStats.attackPower);
     }
 }

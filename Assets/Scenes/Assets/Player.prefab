@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1779064854829097073}
   - component: {fileID: 1884890811728813668}
   - component: {fileID: 8385871040654324433}
+  - component: {fileID: 5292149634963032145}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -142,3 +143,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 1884890811728813668}
+  unitStats: {fileID: 5292149634963032145}
+--- !u!114 &5292149634963032145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527898226061835667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4277aaa54666f874ea35d778c0b02454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 0
+  attackPower: 10
+  attackRange: 1.5
+  attackSpeed: 0
+  moveSpeed: 5
+  defense: 5
+  level: 1
+  experience: 0
+  experienceToNextLevel: 100
