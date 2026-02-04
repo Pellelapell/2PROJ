@@ -20,12 +20,12 @@ public class UnitAttack : MonoBehaviour
 
     void Update()
     {
-        GetTargets();
+        GetTarget();
     }
 
 
     GameObject GetTarget()
     {
-
+        return null;
     }
 }
