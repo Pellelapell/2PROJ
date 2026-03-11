@@ -11,6 +11,7 @@ public class UnitVisuals : MonoBehaviour
     private void Awake()
     {
         stats = GetComponent<UnitStats>();
+        unitRenderer = GetComponent<Renderer>();
     }
 
     public void ApplyRaceVisuals()
