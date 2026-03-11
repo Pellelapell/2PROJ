@@ -16,7 +16,13 @@ namespace SupKonQuest
             if (camp == null)
                 camp = GetComponent<Camp>();
         }
-
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                ProduceInfantry();
+            }
+        }
         public void ProduceInfantry()
         {
             if (camp == null || camp.owner == null || infantryPrefab == null || camp.spawnPoint == null)
