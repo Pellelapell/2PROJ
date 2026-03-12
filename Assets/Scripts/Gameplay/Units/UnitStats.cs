@@ -16,7 +16,7 @@ namespace SupKonQuest
         public float attackSpeed = 1f;
         public float attackRange = 2f;
         public float moveSpeed = 4f;
-
+        public float price;
         private void Start()
         {
             currentHealth = maxHealth;

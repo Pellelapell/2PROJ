@@ -15,4 +15,6 @@ MonoBehaviour:
   race: 1
   displayName: Demon
   uiColor: {r: 0.74509805, g: 0.13906041, b: 0, a: 1}
-  visuals: []
+  visuals:
+  - unitType: 0
+    sprite: {fileID: 0}
