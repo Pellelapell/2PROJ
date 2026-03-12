@@ -192,3 +192,5 @@ MonoBehaviour:
   attackSpeed: 1
   attackRange: 2
   moveSpeed: 4
+  price: 0
+  detectRange: 4

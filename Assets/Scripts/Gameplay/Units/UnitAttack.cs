@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace SupKonQuest
 {
@@ -7,12 +8,14 @@ namespace SupKonQuest
         [Header("Detection")]
         [SerializeField] private LayerMask unitLayerMask;
 
+        private NavMeshAgent agent;
         private UnitStats stats;
         private float attackCooldown;
 
         private void Awake()
         {
             stats = GetComponent<UnitStats>();
+            agent = GetComponent<NavMeshAgent>();
         }
 
         private void Update()
@@ -36,7 +39,7 @@ namespace SupKonQuest
 
         private UnitStats FindTarget()
         {
-            Collider[] hits = Physics.OverlapSphere(transform.position, stats.attackRange, unitLayerMask);
+            Collider[] hits = Physics.OverlapSphere(transform.position, stats.detectRange, unitLayerMask);
 
             UnitStats closest = null;
             float closestDist = float.MaxValue;
@@ -71,9 +74,6 @@ namespace SupKonQuest
         {
             UnitStats s = GetComponent<UnitStats>();
             float range = s != null ? s.attackRange : 2f;
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, range);
         }
     }
 }
