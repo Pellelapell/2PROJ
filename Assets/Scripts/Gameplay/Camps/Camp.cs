@@ -16,6 +16,8 @@ namespace SupKonQuest
 
         public void SetOwner(PlayerData newOwner)
         {
+            if (owner == newOwner) return;
+
             if (owner != null)
             {
                 owner.ownedCamps.Remove(this);
@@ -28,6 +30,8 @@ namespace SupKonQuest
             {
                 owner.ownedCamps.Add(this);
             }
+
+            UpdateCampVisual();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -45,6 +49,31 @@ namespace SupKonQuest
             {
                 SetOwner(unitOwner);
                 Debug.Log($"{name} captured by Player {unitOwner.playerId}");
+            }
+        }
+
+        private void UpdateCampVisual()
+        {
+            Renderer rend = GetComponent<Renderer>();
+            if (rend == null) return;
+
+            if (owner == null)
+            {
+                rend.material.color = Color.gray;
+                return;
+            }
+
+            switch (owner.race)
+            {
+                case Race.Human:
+                    rend.material.color = Color.blue;
+                    break;
+                case Race.Elf:
+                    rend.material.color = Color.green;
+                    break;
+                case Race.Demon:
+                    rend.material.color = Color.red;
+                    break;
             }
         }
     }
