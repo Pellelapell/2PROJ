@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.AI.Navigation;
-using System.Collections.Generic;
 
 public class HexGridGenerator : MonoBehaviour
 {
@@ -13,6 +12,10 @@ public class HexGridGenerator : MonoBehaviour
 
     [Header("Randomness")]
     public int seed = 0;
+
+    [Header("Scale")]
+    [Tooltip("Facteur de réduction de la taille des hexagones")]
+    public float hexScale = 0.5f; // 0.5 = moitié de la taille originale
 
     void Start()
     {
@@ -27,16 +30,12 @@ public class HexGridGenerator : MonoBehaviour
 
         GameObject temp = Instantiate(hexPrefabs[0]);
         Renderer r = temp.GetComponentInChildren<Renderer>();
-        float hexWidth = r.bounds.size.x;
-        float hexDepth = r.bounds.size.z;
+        float hexWidth = r.bounds.size.x * hexScale;
+        float hexDepth = r.bounds.size.z * hexScale;
         Destroy(temp);
 
-        float colSpacing = hexWidth * 0.98f;
-        float rowSpacing = hexDepth * 0.98f;
-
-        // Stocke les instances ET leurs meshFilters
-        List<GameObject> instances = new List<GameObject>();
-        List<MeshFilter> meshFilters = new List<MeshFilter>();
+        float colSpacing = hexWidth * 0.75f;
+        float rowSpacing = hexDepth * 1f;
 
         for (int x = 0; x < width; x++)
         {
@@ -49,58 +48,35 @@ public class HexGridGenerator : MonoBehaviour
                 GameObject prefab = hexPrefabs[Random.Range(0, hexPrefabs.Length)];
                 GameObject instance = Instantiate(prefab, new Vector3(xPos, 0, zPos), Quaternion.identity, transform);
 
-                MeshFilter mf = instance.GetComponentInChildren<MeshFilter>();
-                if (mf != null)
-                {
-                    meshFilters.Add(mf);
-                    instances.Add(instance);
-                }
+                // applique le scale pour réduire la taille
+                instance.transform.localScale = Vector3.one * hexScale;
+
+                AssignArea(instance);
             }
         }
 
-        CombineMeshes(meshFilters, instances);
+        BuildNavMesh();
     }
 
-    void CombineMeshes(List<MeshFilter> meshFilters, List<GameObject> instances)
+    void AssignArea(GameObject hex)
     {
-        // Crée le mesh combiné
-        GameObject combined = new GameObject("HexMap_Combined");
-        MeshFilter combinedMF = combined.AddComponent<MeshFilter>();
-        MeshRenderer combinedMR = combined.AddComponent<MeshRenderer>();
+        NavMeshModifier modifier = hex.AddComponent<NavMeshModifier>();
+        modifier.overrideArea = true;
 
-        // Récupère le matériau AVANT de détruire quoi que ce soit
-        Material mat = meshFilters[0].GetComponent<MeshRenderer>() != null
-            ? meshFilters[0].GetComponent<MeshRenderer>().sharedMaterial
-            : meshFilters[0].GetComponentInParent<MeshRenderer>().sharedMaterial;
+        int rand = Random.Range(0, 3);
 
-        combinedMR.material = mat;
+        if (rand == 0)
+            modifier.area = UnityEngine.AI.NavMesh.GetAreaFromName("Walkable");
+        else if (rand == 1)
+            modifier.area = UnityEngine.AI.NavMesh.GetAreaFromName("Not Walkable");
+        else
+            modifier.area = UnityEngine.AI.NavMesh.GetAreaFromName("Jump");
+    }
 
-        // Combine les meshes
-        CombineInstance[] combine = new CombineInstance[meshFilters.Count];
-        for (int i = 0; i < meshFilters.Count; i++)
-        {
-            combine[i].mesh = meshFilters[i].sharedMesh;
-            combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
-        }
-
-        Mesh finalMesh = new Mesh();
-        finalMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        finalMesh.CombineMeshes(combine, true, true);
-        combinedMF.mesh = finalMesh;
-
-        // Ajoute le collider
-        MeshCollider mc = combined.AddComponent<MeshCollider>();
-        mc.sharedMesh = finalMesh;
-
-        // Supprime les instances originales APRES la combinaison
-        foreach (GameObject go in instances)
-            Destroy(go);
-
-       // NavMesh
-        NavMeshSurface surface = combined.AddComponent<NavMeshSurface>();
-        surface.collectObjects = CollectObjects.Volume;
+    void BuildNavMesh()
+    {
+        NavMeshSurface surface = gameObject.AddComponent<NavMeshSurface>();
+        surface.collectObjects = CollectObjects.Children;
         surface.BuildNavMesh();
-
-        Debug.Log("HexMap combinée et NavMesh généré !");
     }
 }
