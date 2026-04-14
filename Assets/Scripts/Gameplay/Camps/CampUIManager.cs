@@ -10,6 +10,11 @@ namespace SupKonQuest
         public GameObject panel;
         public TMP_Text titleText;
 
+        [Header("Production Info")]
+        public TMP_Text currentUnitText;
+        public TMP_Text queueText;
+        public Image progressBarFill;
+
         [Header("Buttons")]
         public Button infantryButton;
         public Button rangeButton;
@@ -33,6 +38,11 @@ namespace SupKonQuest
             destroyerButton.onClick.AddListener(() => Produce(UnitType.Destroyer));
         }
 
+        private void Update()
+        {
+            RefreshProductionInfo();
+        }
+
         public void SelectCamp(Camp camp)
         {
             selectedCamp = camp;
@@ -48,13 +58,16 @@ namespace SupKonQuest
             titleText.text = selectedCamp.name + " - " + selectedCamp.campType;
 
             RefreshButtons();
+            RefreshProductionInfo();
         }
 
         public void HideUI()
         {
             selectedCamp = null;
             selectedProduction = null;
-            panel.SetActive(false);
+
+            if (panel != null)
+                panel.SetActive(false);
         }
 
         private void RefreshButtons()
@@ -91,10 +104,42 @@ namespace SupKonQuest
             }
         }
 
+        private void RefreshProductionInfo()
+        {
+            if (selectedProduction == null)
+            {
+                if (currentUnitText != null) currentUnitText.text = "";
+                if (queueText != null) queueText.text = "";
+                if (progressBarFill != null) progressBarFill.fillAmount = 0f;
+                return;
+            }
+
+            UnitType? currentType = selectedProduction.GetCurrentUnitType();
+
+            if (currentUnitText != null)
+            {
+                currentUnitText.text = currentType.HasValue
+                    ? "Producing: " + currentType.Value
+                    : "Producing: Nothing";
+            }
+
+            if (queueText != null)
+            {
+                queueText.text = "Queue: " + selectedProduction.GetQueueCount();
+            }
+
+            if (progressBarFill != null)
+            {
+                progressBarFill.fillAmount = selectedProduction.GetCurrentProgress01();
+            }
+        }
+
         private void Produce(UnitType type)
         {
             if (selectedProduction == null) return;
-            selectedProduction.Produce(type);   
+
+            selectedProduction.Produce(type);
+            RefreshProductionInfo();
         }
     }
 }

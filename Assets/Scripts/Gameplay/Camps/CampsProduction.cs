@@ -1,27 +1,30 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SupKonQuest
 {
     public class CampProduction : MonoBehaviour
     {
+        [System.Serializable]
+        public class UnitProductionData
+        {
+            public UnitType unitType;
+            public GameObject prefab;
+            public int cost;
+            public float buildTime;
+        }
+
         [Header("References")]
         public Camp camp;
 
-        [Header("Unit Prefabs")]
-        public GameObject infantryPrefab;
-        public GameObject rangePrefab;
-        public GameObject heavyPrefab;
-        public GameObject transportPrefab;
-        public GameObject frigatePrefab;
-        public GameObject destroyerPrefab;
+        [Header("Production Data")]
+        public List<UnitProductionData> availableUnits = new List<UnitProductionData>();
 
-        [Header("Costs")]
-        public int infantryCost = 25;
-        public int rangeCost = 35;
-        public int heavyCost = 50;
-        public int transportCost = 40;
-        public int frigateCost = 60;
-        public int destroyerCost = 80;
+        private readonly Queue<UnitProductionData> productionQueue = new Queue<UnitProductionData>();
+
+        private UnitProductionData currentProduction;
+        private float currentProductionTimer;
+        private bool isProducing;
 
         private void Awake()
         {
@@ -29,43 +32,75 @@ namespace SupKonQuest
                 camp = GetComponent<Camp>();
         }
 
-        public void Produce(UnitType type)
+        private void Update()
         {
-            switch (type)
-            {
-                case UnitType.Infantry:
-                    TryProduce(infantryPrefab, infantryCost);
-                    break;
-                case UnitType.Range:
-                    TryProduce(rangePrefab, rangeCost);
-                    break;
-                case UnitType.Heavy:
-                    TryProduce(heavyPrefab, heavyCost);
-                    break;
-                case UnitType.Transport:
-                    TryProduce(transportPrefab, transportCost);
-                    break;
-                case UnitType.Frigate:
-                    TryProduce(frigatePrefab, frigateCost);
-                    break;
-                case UnitType.Destroyer:
-                    TryProduce(destroyerPrefab, destroyerCost);
-                    break;
-            }
+            HandleProduction();
         }
 
-        private void TryProduce(GameObject prefab, int cost)
+        public void Produce(UnitType type)
         {
-            if (camp == null || camp.owner == null || prefab == null || camp.spawnPoint == null)
+            if (camp == null || camp.owner == null)
                 return;
 
-            if (!camp.owner.SpendMoney(cost))
+            UnitProductionData data = GetProductionData(type);
+            if (data == null)
+            {
+                Debug.LogWarning($"No production data found for unit type {type} on {name}");
+                return;
+            }
+
+            if (!camp.owner.SpendMoney(data.cost))
             {
                 Debug.Log("Not enough money");
                 return;
             }
 
-            GameObject unitObj = Instantiate(prefab, camp.spawnPoint.position, Quaternion.identity);
+            productionQueue.Enqueue(data);
+            Debug.Log($"{type} added to queue in {camp.name}. Queue size: {productionQueue.Count}");
+
+            if (!isProducing)
+            {
+                StartNextProduction();
+            }
+        }
+
+        private void HandleProduction()
+        {
+            if (!isProducing || currentProduction == null)
+                return;
+
+            currentProductionTimer -= Time.deltaTime;
+
+            if (currentProductionTimer <= 0f)
+            {
+                SpawnUnit(currentProduction);
+                StartNextProduction();
+            }
+        }
+
+        private void StartNextProduction()
+        {
+            if (productionQueue.Count == 0)
+            {
+                isProducing = false;
+                currentProduction = null;
+                currentProductionTimer = 0f;
+                return;
+            }
+
+            currentProduction = productionQueue.Dequeue();
+            currentProductionTimer = currentProduction.buildTime;
+            isProducing = true;
+
+            Debug.Log($"Started producing {currentProduction.unitType} in {camp.name} ({currentProduction.buildTime}s)");
+        }
+
+        private void SpawnUnit(UnitProductionData data)
+        {
+            if (camp == null || camp.owner == null || camp.spawnPoint == null || data.prefab == null)
+                return;
+
+            GameObject unitObj = Instantiate(data.prefab, camp.spawnPoint.position, Quaternion.identity);
 
             UnitStats stats = unitObj.GetComponent<UnitStats>();
             if (stats != null)
@@ -79,6 +114,45 @@ namespace SupKonQuest
             {
                 visuals.ApplyRaceVisuals();
             }
+
+            Debug.Log($"{data.unitType} spawned from {camp.name}");
+        }
+
+        private UnitProductionData GetProductionData(UnitType type)
+        {
+            foreach (UnitProductionData data in availableUnits)
+            {
+                if (data.unitType == type)
+                    return data;
+            }
+
+            return null;
+        }
+
+        public int GetQueueCount()
+        {
+            return productionQueue.Count + (isProducing ? 1 : 0);
+        }
+
+        public bool IsProducing()
+        {
+            return isProducing;
+        }
+
+        public float GetCurrentProgress01()
+        {
+            if (!isProducing || currentProduction == null || currentProduction.buildTime <= 0f)
+                return 0f;
+
+            return 1f - (currentProductionTimer / currentProduction.buildTime);
+        }
+
+        public UnitType? GetCurrentUnitType()
+        {
+            if (!isProducing || currentProduction == null)
+                return null;
+
+            return currentProduction.unitType;
         }
     }
 }
