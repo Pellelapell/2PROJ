@@ -997,6 +997,7 @@ GameObject:
   - component: {fileID: 534388191}
   - component: {fileID: 534388190}
   - component: {fileID: 534388192}
+  - component: {fileID: 534388193}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1060,6 +1061,26 @@ MonoBehaviour:
   transportButton: {fileID: 204842272}
   frigateButton: {fileID: 992172644}
   destroyerButton: {fileID: 1410976549}
+--- !u!114 &534388193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534388189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a15ca708cacd6524885ee3456ee647b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hexPrefabs:
+  - {fileID: 8835370122785204213, guid: 301c0c0926324954e873c39c0a6a3db9, type: 3}
+  - {fileID: 3637096172939143290, guid: 253bd66f55ba3c64aa9825ea2896b609, type: 3}
+  - {fileID: 5641193676315141248, guid: 9f271ff3af3fd244896c0e50c4548ce1, type: 3}
+  - {fileID: 2413447369293234240, guid: 3b042d658ba55d940a649b33c122fbca, type: 3}
+  width: 8
+  height: 8
+  seed: 0
 --- !u!1001 &549338217
 PrefabInstance:
   m_ObjectHideFlags: 0

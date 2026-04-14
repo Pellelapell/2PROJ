@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.AI.Navigation;
 
 public class HexGridGenerator : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class HexGridGenerator : MonoBehaviour
     [Header("Randomness")]
     public int seed = 0;
 
+    [Header("Scale")]
+    [Tooltip("Facteur de réduction de la taille des hexagones")]
+    public float hexScale = 0.5f; // 0.5 = moitié de la taille originale
+
     void Start()
     {
         if (hexPrefabs == null || hexPrefabs.Length == 0)
@@ -23,11 +28,10 @@ public class HexGridGenerator : MonoBehaviour
         if (seed != 0)
             Random.InitState(seed);
 
-        // Mesure automatique basée sur le premier prefab
         GameObject temp = Instantiate(hexPrefabs[0]);
         Renderer r = temp.GetComponentInChildren<Renderer>();
-        float hexWidth = r.bounds.size.x;
-        float hexDepth = r.bounds.size.z;
+        float hexWidth = r.bounds.size.x * hexScale;
+        float hexDepth = r.bounds.size.z * hexScale;
         Destroy(temp);
 
         float colSpacing = hexWidth * 0.75f;
@@ -42,8 +46,37 @@ public class HexGridGenerator : MonoBehaviour
                 float zPos = z * rowSpacing + zOffset;
 
                 GameObject prefab = hexPrefabs[Random.Range(0, hexPrefabs.Length)];
-                Instantiate(prefab, new Vector3(xPos, 0, zPos), Quaternion.identity, transform);
+                GameObject instance = Instantiate(prefab, new Vector3(xPos, 0, zPos), Quaternion.identity, transform);
+
+                // applique le scale pour réduire la taille
+                instance.transform.localScale = Vector3.one * hexScale;
+
+                AssignArea(instance);
             }
         }
+
+        BuildNavMesh();
+    }
+
+    void AssignArea(GameObject hex)
+    {
+        NavMeshModifier modifier = hex.AddComponent<NavMeshModifier>();
+        modifier.overrideArea = true;
+
+        int rand = Random.Range(0, 3);
+
+        if (rand == 0)
+            modifier.area = UnityEngine.AI.NavMesh.GetAreaFromName("Walkable");
+        else if (rand == 1)
+            modifier.area = UnityEngine.AI.NavMesh.GetAreaFromName("Not Walkable");
+        else
+            modifier.area = UnityEngine.AI.NavMesh.GetAreaFromName("Jump");
+    }
+
+    void BuildNavMesh()
+    {
+        NavMeshSurface surface = gameObject.AddComponent<NavMeshSurface>();
+        surface.collectObjects = CollectObjects.Children;
+        surface.BuildNavMesh();
     }
 }

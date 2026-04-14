@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 77718075950593998}
   - component: {fileID: 8457152886457965826}
   m_Layer: 3
-  m_Name: Unit_Infantry
+  m_Name: "Unit_Fr\xE9gate"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,12 +185,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ownerId: 0
   race: 0
-  unitType: 0
-  maxHealth: 100
-  currentHealth: 100
-  attackDamage: 10
-  attackSpeed: 1
-  attackRange: 2
-  moveSpeed: 4
+  unitType: 8
+  damagetype: 0
+  maxHealth: 350
+  currentHealth: 350
+  attackDamage: 12
+  attackSpeed: 0.8
+  attackRange: 10
+  moveSpeed: 4.5
   price: 0
   detectRange: 4

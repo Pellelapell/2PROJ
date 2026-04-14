@@ -9,6 +9,8 @@ namespace SupKonQuest
         public Race race;
         public UnitType unitType;
 
+        public DamageType damagetype;
+
         [Header("Stats")]
         public int maxHealth = 100;
         public int currentHealth = 100;
@@ -16,6 +18,7 @@ namespace SupKonQuest
         public float attackSpeed = 1f;
         public float attackRange = 2f;
         public float moveSpeed = 4f;
+        
         public float price;
         public float detectRange;
         private void Start()
