@@ -195,3 +195,4 @@ MonoBehaviour:
   moveSpeed: 2
   price: 0
   detectRange: 3
+  healthBarPrefab: {fileID: 4727767408138536273, guid: d493fafa3f984904ba58cdd6d12ca9f2, type: 3}

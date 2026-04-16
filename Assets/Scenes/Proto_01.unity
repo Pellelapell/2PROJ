@@ -1078,9 +1078,10 @@ MonoBehaviour:
   - {fileID: 3637096172939143290, guid: 253bd66f55ba3c64aa9825ea2896b609, type: 3}
   - {fileID: 5641193676315141248, guid: 9f271ff3af3fd244896c0e50c4548ce1, type: 3}
   - {fileID: 2413447369293234240, guid: 3b042d658ba55d940a649b33c122fbca, type: 3}
-  width: 8
-  height: 8
+  width: 0
+  height: 0
   seed: 0
+  hexScale: 0.5
 --- !u!1001 &549338217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1095,7 +1096,7 @@ PrefabInstance:
       objectReference: {fileID: 1397515485}
     - target: {fileID: 737311941432577949, guid: 86146fb016c06e541ae5919665dba882, type: 3}
       propertyPath: campType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3044618288830488966, guid: 86146fb016c06e541ae5919665dba882, type: 3}
       propertyPath: m_Name
@@ -1153,6 +1154,22 @@ PrefabInstance:
       propertyPath: transportPrefab
       value: 
       objectReference: {fileID: 4258408347571373034, guid: 3ed9e75951d0dd348be4e866cba4e2ac, type: 3}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[0].cost
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 4258408347571373034, guid: 25aeed5155f073648b003b5f196ce570, type: 3}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[0].buildTime
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1541,10 +1558,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
       propertyPath: availableUnits.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
       propertyPath: availableUnits.Array.data[0].cost
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[1].cost
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[2].cost
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
@@ -1552,7 +1577,27 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4258408347571373034, guid: 3ed9e75951d0dd348be4e866cba4e2ac, type: 3}
     - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[1].prefab
+      value: 
+      objectReference: {fileID: 4258408347571373034, guid: 25aeed5155f073648b003b5f196ce570, type: 3}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[2].prefab
+      value: 
+      objectReference: {fileID: 4258408347571373034, guid: 500b7aaccbe549541833799cce143105, type: 3}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[2].unitType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
       propertyPath: availableUnits.Array.data[0].buildTime
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[1].buildTime
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388071035605871899, guid: 86146fb016c06e541ae5919665dba882, type: 3}
+      propertyPath: availableUnits.Array.data[2].buildTime
       value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []

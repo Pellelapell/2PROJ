@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 77718075950593998}
   - component: {fileID: 8457152886457965826}
   m_Layer: 3
-  m_Name: Unit_Infantry 10
+  m_Name: Unit_Infantry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,6 +186,7 @@ MonoBehaviour:
   ownerId: 0
   race: 0
   unitType: 0
+  damagetype: 0
   maxHealth: 100
   currentHealth: 100
   attackDamage: 10
@@ -194,3 +195,4 @@ MonoBehaviour:
   moveSpeed: 4
   price: 0
   detectRange: 4
+  healthBarPrefab: {fileID: 4727767408138536273, guid: d493fafa3f984904ba58cdd6d12ca9f2, type: 3}
